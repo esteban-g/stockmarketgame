@@ -14,7 +14,7 @@ This software is not inteded to perform financial transactions, and advices, sug
 
 With this software, it is possible to  create different portfolios containing a number of assests (e.g. stocks, among others), visualize them, and apply algorithmical functions for prediction, anticipation of prices, etc. 
 
-This software was developed partially based on the user interface of  [Gerard Bentley](https://github.com/gerardrbentley), and powered by [OpenBB](https://www.openbb.co/), [Streamlit](https://streamlit.io), [pandas](https://pandas.pydata.org/docs/), [plotly](https://plotly.com/python/), and [streamlit-aggrid](https://github.com/PablocFonseca/streamlit-aggrid).
+This software was developed partially based on the work of  [Gerard Bentley](https://github.com/gerardrbentley) and [t0nychn](https://github.com/t0nychn). Powered by [OpenBB](https://www.openbb.co/), [Streamlit](https://streamlit.io), [pandas](https://pandas.pydata.org/docs/), [plotly](https://plotly.com/python/), and [streamlit-aggrid](https://github.com/PablocFonseca/streamlit-aggrid).
 
 ## Contact
 
