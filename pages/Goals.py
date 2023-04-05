@@ -7,6 +7,7 @@ Created on Fri Jun  4 11:54:56 2021
 import streamlit as st
 from datetime import datetime
 import matplotlib.pyplot as plt
+import streamlit.components.v1 as components
 
 # custom packages (see repo)
 # import tree_constructor as tc
@@ -26,6 +27,9 @@ st.set_page_config(
 )
 
 month = datetime.now().month
+
+
+
 st.title('🌍 Goals')
 
 
@@ -61,8 +65,19 @@ p = trees.p_value()
 st.sidebar.write("Stock Growth Probability (p) ", round(p, 4))
 
 # back to main body
-st.header("Test: *See how the Cox-Ross-Rubinstein (CRR) options pricing model react to changing parameters*")
-st.markdown("This visualisation aims to explore the dynamics of abstract financial theory. "
+st.header('Define your goals and simulate')
+
+
+storyfied = st.expander("SIMULATION")
+with storyfied:
+    # st.write(Path("gamified\webgl_geometry_minecraft.html").read_text())
+    components.iframe("http://localhost:8000/webxr_vr_rollercoaster.html",height=600)
+
+    # st.write(Path("INFO.md").read_text())
+
+
+st.markdown("Test: *See how the Cox-Ross-Rubinstein (CRR) options pricing model react to changing parameters*"
+            "This visualisation aims to explore the dynamics of abstract financial theory. "
             "Can you adjust the display to see how how the value of a call option today is positively correlated to the interest rate, "
             "or how the diffusion of the CRR tree is inherently lognormal?"
             )

@@ -7,6 +7,8 @@ from st_aggrid.shared import JsCode
 from st_aggrid.grid_options_builder import GridOptionsBuilder
 import pandas as pd
 import plotly.express as px
+import streamlit.components.v1 as components
+
 
 chart = functools.partial(st.plotly_chart, use_container_width=True)
 COMMON_ARGS = {
@@ -85,8 +87,13 @@ def filter_data(
 def main() -> None:
     st.title('🌍 Dashboard')
 
-    with st.expander("Description"):
-        st.write(Path("INFO.md").read_text())
+    storyfied = st.expander("STORYFIED")
+    with storyfied:
+        # st.write(Path("gamified\webgl_geometry_minecraft.html").read_text())
+        components.iframe("http://localhost:8000/webgl_animation_skinning_ik.html",height=600)
+
+    # with st.expander("Description"):
+    #     st.write(Path("INFO.md").read_text())
 
     st.subheader("Upload your CSV portfolio")
     uploaded_data = st.file_uploader(

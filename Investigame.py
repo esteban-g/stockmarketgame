@@ -16,7 +16,7 @@ import streamlit.components.v1 as components
 from utils.investigamedb import *
 from utils.login import *
 from streamlit_cookies_manager import EncryptedCookieManager
-
+from pathlib import Path
 
 
 # Candlestick code from 
@@ -157,6 +157,14 @@ def loadFilePortfolio(portfolio):
 # st.set_page_config(layout="wide")
 
 st.set_page_config(page_title='🌍 InvestiGame', page_icon='📈', layout='wide')
+
+storyfied = st.expander("SIMULATION")
+with storyfied:
+    # st.write(Path("gamified\webgl_geometry_minecraft.html").read_text())
+    components.iframe("http://localhost:8000/webgl_geometry_minecraft.html",height=600)
+
+    # st.write(Path("INFO.md").read_text())
+
 st.title('🌍 Portfolio Management')
 
 
