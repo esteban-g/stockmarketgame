@@ -26,7 +26,7 @@ def loginprocedure():
                     username= st.text_input(label="Username", value="")
                     
 
-                    password= st.text_input(label="Password", value="")
+                    password= st.text_input(label="Password", value="", type="password")
                     
                                 
                     submittedlogin = st.form_submit_button("Verify")
@@ -44,4 +44,3 @@ def loginprocedure():
                             login_modal.close()
                         else:
                             st.write('Try again')
-                            

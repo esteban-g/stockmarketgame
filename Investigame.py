@@ -443,7 +443,7 @@ if 'username' in st.session_state:
                 st.write('No Data Found for '+asset)
 
 
-homeTab, discoveryTab, indicesTab = st.tabs(["Home", "Discovery", "Indices"])
+homeTab, discoveryTab, indicesTab = st.tabs(["Portfolio", "Analysis", "Indices"])
 
  
 with homeTab:
