@@ -4,6 +4,7 @@ import datetime
 import time
 import pandas as pd
 import pandas.io.sql as sqlio
+from numpy.random import randint
 
 from openbb_terminal.sdk import openbb
 import plotly.graph_objects as go
@@ -13,6 +14,8 @@ from configparser import ConfigParser
 import psycopg2
 import streamlit.components.v1 as components
 from utils.investigamedb import *
+from utils.login import *
+from streamlit_cookies_manager import EncryptedCookieManager
 
 
 
@@ -154,7 +157,7 @@ def loadFilePortfolio(portfolio):
 # st.set_page_config(layout="wide")
 
 st.set_page_config(page_title='🌍 InvestiGame', page_icon='📈', layout='wide')
-st.title('🌍 InvestiGame')
+st.title('🌍 Portfolio Management')
 
 
 # st.dataframe(indices)  # Same as st.write(df)
@@ -164,48 +167,48 @@ st.title('🌍 InvestiGame')
 
 
 if 'username' not in st.session_state:
+    loginprocedure()
+    # st.sidebar.warning(
+    # "Please log in")
+
     
-    
+    # with st.sidebar:
+   
+    #     login_modal = Modal("Log-in",'divlogin',20,500)
+    #     login_button = st.button("Log in")
+        
 
-    # st.success("Done!")
-    st.write('Please log in')
-    login_modal = Modal("Log in",'div',20,500)
-    login_button = st.button("Log in")
+    #     if login_button:
+    #         login_modal.open()
 
-    if login_button:
-        login_modal.open()
+    #     if login_modal.is_open():
+    #         with login_modal.container():
 
-    if login_modal.is_open():
-        with login_modal.container():
+    #             with st.form("login_form"):
 
-            with st.form("login_form"):
+    #                 username= st.text_input(label="Username", value="")
+                    
 
-                username= st.text_input(label="Username", value="")
-                
+    #                 password= st.text_input(label="Password", value="")
+                    
+                                
+    #                 submittedlogin = st.form_submit_button("Verify")
+    #                 if submittedlogin:
 
-                password= st.text_input(label="Password", value="")
-                
+    #                     if validateUser(username,password):
+    #                         st.session_state.username = username
+    #                         st.session_state.password = password
+    #                         st.write('Welcome')
+    #                         print('username',username)
                             
-                submitted = st.form_submit_button("Submit")
-                if submitted:
-                    # st.write("slider")
-                    # st.write("slider", slider_val, "checkbox", checkbox_val)
-                    # insertPortfolio(newportfolio,currentCurrency)
-                    if validateUser(username,password):
-                        st.session_state.username = username
-                        st.session_state.password = password
-                        st.write('Welcome')
-                        print('username',username)
-                        st.sidebar.button('login')
-                        add_selectbox = st.sidebar.text(
-                            username
-                        )
-                        login_modal.close()
-                    else:
-                        st.write('Try again')
-else:
-    st.write(st.session_state.username)                       
-
+                            
+    #                         login_modal.close()
+    #                     else:
+    #                         st.write('Try again')
+else:                            
+    add_selectbox = st.sidebar.text(
+                                st.session_state.username
+                            )
     
 
 #TODO CHANGE THE FOLLOWING FOR THOSE ASSETS IN THE PORTFOLIO
@@ -227,7 +230,7 @@ col5.metric(indices[indices.columns[0]][4], indices[indices.columns[1]][4], indi
 
 
 
-st.subheader('PORTFOLIO MANAGEMENT')
+
 col1, col2 = st.columns(2)
 
 with col1:
@@ -238,7 +241,7 @@ with col1:
 
 with col2:
     st.subheader('Actions')
-    modal = Modal("Setup your portfolio",'div',20,500)
+    modal = Modal("Setup your portfolio",'divportf',20,500)
     open_modal = st.button("Create a new Portfolio")
     st.button("Share Portfolio")
     st.button("Delete a Portfolio")
@@ -294,82 +297,150 @@ with col2:
 
 # st.markdown("**:blue[Select a portfolio to be updated]**")
 
+if 'username' in st.session_state:
+    # st.sidebar.warning(
+    # "Please log in")
 
+    # with st.sidebar:
 
-col3, col4 = st.columns(2)
-
-with col3:
-
-    portfoliolist = sqlio.read_sql_query("SELECT name FROM portfolio", connecto())
-    portfoliooption = st.selectbox('Your current portfolio:',portfoliolist)
-    st.session_state.current_selected_portfolio = portfoliooption
-    # print(portfoliolist.head())
-
-    # getNameProfolios()
-    # print(st.session_state.name_portfolios)
-    # st.session_state.portf= st.selectbox(c)
-    st.subheader(st.session_state.portf)
-
-with col4:
-    asset = st.text_input('➕ Add assets to your portfolio to get relevant data and news',help ='It can be for example NOK, MSFT, HEXA-B.ST or the name of the company', placeholder ='e.g. NOK, MSFT, HEXA-B.ST')
-
-    if asset:
-        assetsdata = openbb.stocks.load(asset)
-        assetsscreener = pd.DataFrame(openbb.stocks.ca.screener([asset]))       
-
-        # assetscomparison = pd.DataFrame(openbb.stocks.ca.balance([asset], timeframe = '2021'))
-        finnhubkey = open('finnhub.txt').readline()
-        openbb.keys.finnhub(key = finnhubkey, persist = True)
-        assetsnews = pd.DataFrame(openbb.stocks.ba.cnews(asset))
+    #     login_modal = Modal("Log-in",'divlogin',20,500)
+    #     login_button = st.button("Log in")
         
 
-        if len(assetsdata)>0:
+    #     if login_button:
+    #         login_modal.open()
+
+    #     if login_modal.is_open():
+    #         with login_modal.container():
+
+    #             with st.form("login_form"):
+
+    #                 username= st.text_input(label="Username", value="")
+                    
+
+    #                 password= st.text_input(label="Password", value="")
+                    
+                                
+    #                 submittedlogin = st.form_submit_button("Verify")
+    #                 if submittedlogin:
+    #                     if validateUser(username,password):
+    #                         st.session_state.username = username
+    #                         st.session_state.password = password
+    #                         st.write('Welcome')
+    #                         print('username',username)
+                            
+                            
+    #                         login_modal.close()
+    #                     else:
+    #                         st.write('Try again')
+
+# else:                            
+    add_selectbox = st.sidebar.text(st.session_state.username)
+    col3, col4 = st.columns(2)
+
+    with col3:
+
+        portfoliolist = sqlio.read_sql_query("SELECT name FROM portfolio", connecto())
+        portfoliooption = st.selectbox('Your current portfolio:',portfoliolist)
+        st.session_state.current_selected_portfolio = portfoliooption
+
+        # print(portfoliolist.head())
+
+        # getNameProfolios()
+        # print(st.session_state.name_portfolios)
+        # st.session_state.portf= st.selectbox(c)
+        st.subheader(st.session_state.portf)
+        st.subheader(st.session_state.current_selected_portfolio)
+
+    
+
+        allAssets =  getAllAssetsProfolios(st.session_state.current_selected_portfolio,st.session_state.username) 
+        assetslist = sqlio.read_sql_query("SELECT symbol FROM public.assets WHERE id_portfolio=( SELECT id FROM public.portfolio WHERE  name = '"+st.session_state.current_selected_portfolio+"' AND idusers = (SELECT id FROM public.users WHERE username = '"+st.session_state.username+"'))", connecto())
+        pdasstslist = pd.DataFrame(assetslist)       
+
+        assestsframe = st.dataframe(assetslist)
+
+
+
+    with col4:
+        asset = st.text_input('➕ Add assets to your portfolio to get relevant data and news',help ='It can be for example NOK, MSFT, HEXA-B.ST or the name of the company', placeholder ='e.g. NOK, MSFT, HEXA-B.ST')
+
+        if asset:
+            assetsdata = openbb.stocks.load(asset)
+            assetsscreener = pd.DataFrame(openbb.stocks.ca.screener([asset]))       
+
+            # assetscomparison = pd.DataFrame(openbb.stocks.ca.balance([asset], timeframe = '2021'))
+            finnhubkey = open('finnhub.txt').readline()
+            openbb.keys.finnhub(key = finnhubkey, persist = True)
+            assetsnews = pd.DataFrame(openbb.stocks.ba.cnews(asset))
             
-            addSymbol=st.button('➕ Add')
-            st.dataframe(assetsscreener)
-            assetsname = assetsscreener['Company'].iloc[0]
-            st.subheader(assetsname)
 
-            if addSymbol:
-                print('testets')
-                insertRelevantAsset(assetsname,asset,st.session_state.portf)
+            if len(assetsdata)>0:
+                
+                addSymbol=st.button('➕ Add')
+                
+                assetsname = assetsscreener['Company'].iloc[0]
+                st.subheader(assetsname)
+                # st.dataframe(assetsscreener) ORIGINAL
+                # st.dataframe(pdasstslist)
 
-
-            df = assetsdata.reset_index()
-            df.columns = [x.title() for x in df.columns]
-
-            df[f'{ma1}_ma'] = df['Close'].rolling(ma1).mean()
-            df[f'{ma2}_ma'] = df['Close'].rolling(ma2).mean()
-            df = df[-days_to_plot:]
-
-            #
-
-            # Display the plotly chart on the dashboard
-            st.plotly_chart(
-                get_candlestick_plot(df, ma1, ma2, asset),
-                width=0, height=0,
-                use_container_width = True,
-            )
 
             
-            st.subheader('Last news about '+assetsname)
-            st.dataframe(assetsnews)
-        
-            # st.subheader('openbb.stocks.dd.customer')
-            # st.dataframe(openbb.stocks.dd.customer(asset))
-            
-            pd.set_option('display.max_columns', None)
-            
-            # st.subheader('openbb.stocks.options.info')
-            # data = openbb.stocks.options.info(asset)
-            # new_data = pd.DataFrame.from_dict(data, orient='index')
+                
+                if addSymbol: 
+                    
+                    insertRelevantAsset(assetsname,asset,st.session_state.current_selected_portfolio,st.session_state.username)
+                    
+                    #TODO AQUI TOCA AGREGAR/ACTUALIZAR LA LINEA QUE EL USUARIO ACABA DE METER
+                    # assestsframe.add_rows(assetsname)
+                    newasset = {'symbol': assetsname}
+                    pdasstslist.append(newasset, ignore_index = True)
+                    
+                    
+                    
 
-            # new_data = new_data.reset_index(level=0)
-            # new_data.columns=['Heading','Value']
 
-            # AgGrid(new_data, height=300)
-        else:
-            st.write('No Data Found for '+asset)
+
+                df = assetsdata.reset_index()
+                df.columns = [x.title() for x in df.columns]
+
+                df[f'{ma1}_ma'] = df['Close'].rolling(ma1).mean()
+                df[f'{ma2}_ma'] = df['Close'].rolling(ma2).mean()
+                df = df[-days_to_plot:]
+
+                #
+
+                # Display the plotly chart on the dashboard
+                st.plotly_chart(
+                    get_candlestick_plot(df, ma1, ma2, asset),
+                    width=0, height=0,
+                    use_container_width = True,
+                )
+
+                
+                st.subheader('Last news about '+assetsname)
+
+
+                    # \
+                    # .hide(subset=[0, 2, 4], axis=0) \
+                    # .hide(subset=[0, 2, 4], axis=1)
+                st.dataframe(assetsnews.loc[:,["headline","summary", "url"]])
+            
+                # st.subheader('openbb.stocks.dd.customer')
+                # st.dataframe(openbb.stocks.dd.customer(asset))
+                
+                pd.set_option('display.max_columns', None)
+                
+                # st.subheader('openbb.stocks.options.info')
+                # data = openbb.stocks.options.info(asset)
+                # new_data = pd.DataFrame.from_dict(data, orient='index')
+
+                # new_data = new_data.reset_index(level=0)
+                # new_data.columns=['Heading','Value']
+
+                # AgGrid(new_data, height=300)
+            else:
+                st.write('No Data Found for '+asset)
 
 
 homeTab, discoveryTab, indicesTab = st.tabs(["Home", "Discovery", "Indices"])
@@ -459,34 +530,27 @@ with homeTab:
 
 
 with discoveryTab:
-    st.subheader('openbb.stocks.disc.gainers')
+    st.subheader('Companies with the highest positive change ("gainers")')
     gainers = openbb.stocks.disc.gainers()
     st.dataframe(gainers)
 
-    st.subheader('openbb.stocks.disc.losers')
+    st.subheader('Companies with the highest negative change ("losers")')
     losers = openbb.stocks.disc.losers()
     st.dataframe(losers)
 
-    st.subheader('openbb.stocks.disc.gtech')
+    st.subheader('Tech Companies')
     gtech = openbb.stocks.disc.gtech()
     st.dataframe(gtech)
 
-    st.subheader('openbb.stocks.disc.hotpenny')
+    st.subheader('Penny stocks')
+    st.write("Penny stocks are stocks that trade for less than $5 per share1. They are often considered high risk but can potentially offer high rewards")
     hotpenny = openbb.stocks.disc.hotpenny()
     st.dataframe(hotpenny)
 
 with indicesTab:
 
     st.subheader('Stock market indices')
-    col1, col2, col3,col4, col5 = st.columns(5,gap="small")
-    indices= pd.DataFrame(openbb.economy.indices())            
-
-
-    col1.metric('indices[indices.columns[0]]', "70 °F", "1.2 °F")
-    col2.metric("Wind", "9 mph", "-8%")
-    col3.metric("Humidity", "86%", "4%")
-    col4.metric("Wind", "9 mph", "-8%")
-    col5.metric("Humidity", "86%", "4%")
+    
 
     st.dataframe(indices)  # Same as st.write(df)
 

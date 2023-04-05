@@ -278,6 +278,8 @@ def insertRelevantAsset(name, symbol,portfolioname,username):
 
     # getting the timestamp
     ts = datetime.timestamp(dt)
+    now = datetime.now()
+    timestamp = now.strftime('%Y-%m-%d %H:%M:%S')
 
     try:
         # read connection parameters
@@ -289,9 +291,16 @@ def insertRelevantAsset(name, symbol,portfolioname,username):
 		
         # create a cursor
         cur = conn.cursor()
+        
+        
+        # search the idportfolio based on the portfolio name and yser
+        cur.execute("SELECT id FROM public.portfolio WHERE name = '"+portfolioname+"' AND idusers = (SELECT id FROM public.users WHERE username = '"+username+"' LIMIT 1) LIMIT 1")
+        allids = cur.fetchall()
+        idport= allids[0][0]
 
-    # search the idportfolio based on the portfolio name and yser
-        # cur.execute("INSERT INTO assets(symbol,name,timestamp,id_portfolio) VALUES ('"+symbol+"','"+name+"',"+ts+","+idportfolio+")")
+        
+        cur.execute("INSERT INTO assets(symbol,name,timestamp,id_portfolio) VALUES ('"+symbol+"','"+name+"','"+timestamp+"',"+str(idport)+")")
+        
 
 
 	# execute a statement            
@@ -312,5 +321,38 @@ def insertRelevantAsset(name, symbol,portfolioname,username):
             conn.close()
             print('Database connection closed.')            
 
-def test(var):
-    print('test*****************************',var)
+def getAllAssetsProfolios(portfolioname,username):
+    """ Get Porfolios from the PostgreSQL database server """
+    conn = None
+    try:
+        # read connection parameters
+        params = config()
+
+        # connect to the PostgreSQL server
+        print('Connecting to the PostgreSQL database...')
+        conn = psycopg2.connect(**params)
+		
+        # create a cursor
+        cur = conn.cursor()
+        
+	# execute a statement
+        print('PostgreSQL database version:')
+        
+        # search the idportfolio based on the portfolio name and yser
+        cur.execute("SELECT symbol FROM public.assets WHERE id_portfolio=( SELECT id FROM public.portfolio WHERE  name = '"+portfolioname+"' AND idusers = (SELECT id FROM public.users WHERE username = '"+username+"'))")                    
+
+        allassets = cur.fetchall()
+
+        # display the PostgreSQL database server version
+        # db_version = cur.fetchone()
+        # print(db_version)
+       
+	# close the communication with the PostgreSQL
+        cur.close()
+        return allassets
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+            print('Database connection closed.')    

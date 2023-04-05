@@ -4,7 +4,6 @@ import datetime
 import pandas as pd
 import pandas.io.sql as sqlio
 
-from st_aggrid import AgGrid
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from streamlit_modal import Modal
@@ -42,7 +41,7 @@ if 'PP' not in st.session_state:
 
 st.set_page_config(layout="wide")
 
-st.subheader('YOUR INFORMATION')
+st.title('🌍 Your information')
 
 
 # if 'username' not in st.session_state:
